@@ -156,7 +156,7 @@ const socket = io();
 let girls = 0;
 let boys = 0;
 
-const max = 500;
+const max = 100;
 
 const girlsGrid =
 document.getElementById("girlsGrid");
@@ -204,32 +204,35 @@ function updateBoard(){
     const boyFillCount =
     Math.floor((boys/max)*100);
 
-    for(let i=0;i<100;i++){
+for(let i=0;i<100;i++){
 
-        girlCells[i].className =
-        "cell";
+    girlCells[i].className = "cell";
+    boyCells[i].className = "cell";
 
-        boyCells[i].className =
-        "cell";
+}
 
-        if(i < girlFillCount){
+// GIRLS SNAKE
+for(let i=0;i<girls;i++){
 
-            girlCells[i]
-            .classList
-            .add("girlFill");
+    let index = i % 100;
 
-        }
+    girlCells[index]
+    .classList
+    .add("girlFill");
 
-        if(i < boyFillCount){
+}
 
-            boyCells[i]
-            .classList
-            .add("boyFill");
+// BOYS SNAKE
+for(let i=0;i<boys;i++){
 
-        }
+    let index = i % 100;
 
-    }
+    boyCells[index]
+    .classList
+    .add("boyFill");
 
+}
+    
     if(girls >= max){
 
         girls = 0;
