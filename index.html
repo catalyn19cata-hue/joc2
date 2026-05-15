@@ -206,26 +206,19 @@ for(let i=0;i<100;i++){
 }
 
 // GIRLS SNAKE
-for(let i=0;i<girls;i++){
+// GIRLS
+let girlIndex = girls % 100;
 
-    let index = i % 100;
+girlCells[girlIndex]
+.classList
+.add("girlFill");
 
-    girlCells[index]
-    .classList
-    .add("girlFill");
+// BOYS
+let boyIndex = boys % 100;
 
-}
-
-// BOYS SNAKE
-for(let i=0;i<boys;i++){
-
-    let index = i % 100;
-
-    boyCells[index]
-    .classList
-    .add("boyFill");
-
-}
+boyCells[boyIndex]
+.classList
+.add("boyFill");
     
     if(girls >= max){
 
