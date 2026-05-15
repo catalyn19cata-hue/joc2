@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Girls VS Boys</title>
+
+<script src="/socket.io/socket.io.js"></script>
+
+<style>
+
+body{
+    margin:0;
+    overflow:hidden;
+    background:black;
+    font-family:Arial;
+    color:white;
+}
+
+.container{
+    display:flex;
+    width:100vw;
+    height:100vh;
+    gap:20px;
+    padding:20px;
+    box-sizing:border-box;
+}
+
+.side{
+    flex:1;
+    border-radius:20px;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+}
+
+.girls{
+    background:#2a0017;
+    border:5px solid hotpink;
+}
+
+.boys{
+    background:#001d2a;
+    border:5px solid cyan;
+}
+
+.title{
+    font-size:50px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.grid{
+    flex:1;
+    display:grid;
+    grid-template-columns:repeat(10,1fr);
+    gap:5px;
+}
+
+.cell{
+    background:#111;
+    border-radius:50%;
+    aspect-ratio:1;
+}
+
+.girlFill{
+    background:hotpink;
+    box-shadow:0 0 10px hotpink;
+}
+
+.boyFill{
+    background:cyan;
+    box-shadow:0 0 10px cyan;
+}
+
+.score{
+    margin-top:20px;
+    font-size:35px;
+    font-weight:bold;
+}
+
+.middle{
+    width:120px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:70px;
+    font-weight:bold;
+    color:yellow;
+}
+
+.popup{
+    position:absolute;
+    bottom:30px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#111;
+    padding:20px 40px;
+    border-radius:20px;
+    font-size:30px;
+    border:2px solid white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="side girls">
+
+        <div class="title">
+            GIRLS
+        </div>
+
+        <div id="girlsGrid" class="grid"></div>
+
+        <div class="score">
+            <span id="girlsScore">0</span>/500
+        </div>
+
+    </div>
+
+    <div class="middle">
+        VS
+    </div>
+
+    <div class="side boys">
+
+        <div class="title">
+            BOYS
+        </div>
+
+        <div id="boysGrid" class="grid"></div>
+
+        <div class="score">
+            <span id="boysScore">0</span>/500
+        </div>
+
+    </div>
+
+</div>
+
+<div class="popup" id="popup">
+    Waiting gifts...
+</div>
+
+<script>
+
+const socket = io();
+
+let girls = 0;
+let boys = 0;
+
+const max = 500;
+
+const girlsGrid =
+document.getElementById("girlsGrid");
+
+const boysGrid =
+document.getElementById("boysGrid");
+
+for(let i=0;i<100;i++){
+
+    const girlCell =
+    document.createElement("div");
+
+    girlCell.classList.add("cell");
+
+    girlsGrid.appendChild(girlCell);
+
+    const boyCell =
+    document.createElement("div");
+
+    boyCell.classList.add("cell");
+
+    boysGrid.appendChild(boyCell);
+
+}
+
+function updateBoard(){
+
+    document.getElementById(
+        "girlsScore"
+    ).innerText = girls;
+
+    document.getElementById(
+        "boysScore"
+    ).innerText = boys;
+
+    const girlCells =
+    girlsGrid.children;
+
+    const boyCells =
+    boysGrid.children;
+
+    const girlFillCount =
+    Math.floor((girls/max)*100);
+
+    const boyFillCount =
+    Math.floor((boys/max)*100);
+
+    for(let i=0;i<100;i++){
+
+        girlCells[i].className =
+        "cell";
+
+        boyCells[i].className =
+        "cell";
+
+        if(i < girlFillCount){
+
+            girlCells[i]
+            .classList
+            .add("girlFill");
+
+        }
+
+        if(i < boyFillCount){
+
+            boyCells[i]
+            .classList
+            .add("boyFill");
+
+        }
+
+    }
+
+    if(girls >= max){
+
+        girls = 0;
+        boys = 0;
+
+        alert("GIRLS WIN");
+
+    }
+
+    if(boys >= max){
+
+        girls = 0;
+        boys = 0;
+
+        alert("BOYS WIN");
+
+    }
+
+}
+
+socket.on("gift",(data)=>{
+
+    const popup =
+    document.getElementById(
+        "popup"
+    );
+
+    popup.innerText =
+        data.user +
+        " sent " +
+        data.gift +
+        " +" +
+        data.points;
+
+    if(data.side === "girls"){
+
+        girls += data.points;
+
+    }else{
+
+        boys += data.points;
+
+    }
+
+    updateBoard();
+
+});
+
+updateBoard();
+
+</script>
+
+</body>
+</html>
