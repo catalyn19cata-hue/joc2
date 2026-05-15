@@ -198,12 +198,6 @@ function updateBoard(){
     const boyCells =
     boysGrid.children;
 
-    const girlFillCount =
-    Math.floor((girls/max)*100);
-
-    const boyFillCount =
-    Math.floor((boys/max)*100);
-
 for(let i=0;i<100;i++){
 
     girlCells[i].className = "cell";
@@ -282,7 +276,27 @@ socket.on("gift",(data)=>{
 });
 
 updateBoard();
+setInterval(()=>{
 
+    girls++;
+
+    if(girls > 100){
+
+        girls = 0;
+
+    }
+
+    boys++;
+
+    if(boys > 100){
+
+        boys = 0;
+
+    }
+
+    updateBoard();
+
+},200);
 </script>
 
 </body>
